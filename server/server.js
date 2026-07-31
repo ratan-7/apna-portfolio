@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require("./config/db.js")
 const authRoutes = require("./routes/authRoutes.js")
-
+const projectRoutes = require("./routes/projectRoutes.js")
 
 const app = express();
 const port = 3000;
@@ -10,6 +10,8 @@ app.use(express.json());
 connectDB();
 
 app.use("/api", authRoutes);
+app.use("/api", projectRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('Portfolio api is running...');
