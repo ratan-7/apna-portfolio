@@ -6,6 +6,7 @@ const skillRoutes = require("./routes/skillRoutes.js")
 const experienceRoutes = require("./routes/experienceRoutes.js")
 const educationRoutes = require("./routes/educationRoutes.js")
 const contactRoutes = require("./routes/contactRoutes.js")
+const certificateRoutes=require("./routes/certificateRoutes.js")
 
 const app = express();
 const port = 3000;
@@ -18,7 +19,9 @@ app.use("/api", projectRoutes);
 app.use("/api", skillRoutes);
 app.use("/api", experienceRoutes);
 app.use("/api", educationRoutes);
-app.use("/api", contactRoutes);
+app.use("/api", contactRoutes); 
+app.use("/api",certificateRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('Portfolio api is running...');
