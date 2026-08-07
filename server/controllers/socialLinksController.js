@@ -14,11 +14,11 @@ exports.getSocialLinks = async (req, res) => {
 
 exports.updateSocialLinks = async (req, res) => {
     try {
-        const { resumeUrl, github, linkedin, leetcode, youtube, instagram, email, phone } = req.body;
+        const { resumeUrl, github, linkedin, leetcode, youtube, instagram, email, phone, twitter } = req.body;
 
         const social = await SocialLinks.findOneAndUpdate(
             {},
-            { resumeUrl, github, linkedin, leetcode, youtube, instagram, email, phone },
+            { resumeUrl, github, linkedin, leetcode, youtube, instagram, email, phone, twitter },
             { new: true, upsert: true }
         );
 

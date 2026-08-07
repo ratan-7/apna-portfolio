@@ -42,6 +42,10 @@ const SocialSchema = new Schema({
     phone: {
         type: String,
         default: ""
+    },
+    twitter: {
+        type: String,
+        default: ""
     }
 },
     { timestamps: true }

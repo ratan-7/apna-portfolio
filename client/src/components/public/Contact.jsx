@@ -9,6 +9,7 @@ import {
     Code2,
     ArrowRight,
     Loader2,
+    Twitter,
 } from "lucide-react";
 import Reveal from "./Reveal";
 import { getSocialLinks } from "../../api/socialApi";
@@ -47,6 +48,7 @@ export default function Contact() {
             { key: "leetcode", icon: Code2, href: social.leetcode },
             { key: "youtube", icon: Youtube, href: social.youtube },
             { key: "instagram", icon: Instagram, href: social.instagram },
+            { key: "twitter", icon: Twitter, href: social.twitter },
         ].filter((l) => l.href)
         : [];
 

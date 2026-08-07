@@ -11,6 +11,7 @@ const FIELDS = [
     { name: "instagram", label: "Instagram", placeholder: "https://instagram.com/username" },
     { name: "email", label: "Email", placeholder: "you@example.com" },
     { name: "phone", label: "Phone", placeholder: "+91 98765 43210" },
+    { name: "twitter", label: "Twitter", placeholder: "https://x.com/username" },
 ];
 
 const EMPTY = { resumeUrl: "", ...Object.fromEntries(FIELDS.map((f) => [f.name, ""])) };
