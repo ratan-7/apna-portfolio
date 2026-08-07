@@ -8,9 +8,9 @@ exports.getAllExperiences = async (req, res) => {
                 message: "experiences not found"
             })
         }
-        res.status(200).json({
+        res.status(200).json(
             experiences
-        })
+        )
     } catch (error) {
         res.status(500).json({
             message: error.message

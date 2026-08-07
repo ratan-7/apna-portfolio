@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require("cors")
 const connectDB = require("./config/db.js")
 const authRoutes = require("./routes/authRoutes.js")
 const projectRoutes = require("./routes/projectRoutes.js")
@@ -9,14 +10,21 @@ const contactRoutes = require("./routes/contactRoutes.js")
 const certificateRoutes = require("./routes/certificateRoutes.js")
 const socialLinksRoutes = require("./routes/socialLinksRoutes.js")
 const analyticsRoutes = require("./routes/analyticsRoutes.js")
+const profileRoutes = require("./routes/profileRoutes.js");
+const uploadRoutes = require("./routes/uploadRoutes.js");
 
 const app = express();
 const port = 3000;
-
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    })
+);
 app.use(express.json());
 connectDB();
 
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api", projectRoutes);
 app.use("/api", skillRoutes);
 app.use("/api", experienceRoutes);
@@ -24,8 +32,9 @@ app.use("/api", educationRoutes);
 app.use("/api", contactRoutes);
 app.use("/api", certificateRoutes);
 app.use("/api", socialLinksRoutes);
-app.use("/api", analyticsRoutes);
-
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api", profileRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.get('/', (req, res) => {
     res.send('Portfolio api is running...');

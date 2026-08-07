@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+}
+
+/* ===== Dark theme (default) ===== */
+:root,
+html[data-theme="dark"] {
+  --bg: #070b14;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-bg-hover: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-border-strong: rgba(255, 255, 255, 0.15);
+  --code-bg: rgba(0, 0, 0, 0.4);
+  --nav-bg: rgba(7, 11, 20, 0.75);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-muted: #64748b;
+  --text-faint: #475569;
+  --accent-cyan: #22d3ee;
+  --accent-cyan-light: #67e8f9;
+  --accent-cyan-on: #020617;
+  --accent-emerald: #34d399;
+  --accent-amber: #fbbf24;
+}
+
+/* ===== Light theme ===== */
+html[data-theme="light"] {
+  --bg: #f6f5f0;
+  --card-bg: rgba(0, 0, 0, 0.025);
+  --card-bg-hover: rgba(0, 0, 0, 0.045);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --card-border-strong: rgba(0, 0, 0, 0.18);
+  --code-bg: rgba(0, 0, 0, 0.05);
+  --nav-bg: rgba(246, 245, 240, 0.85);
+  --text-primary: #171512;
+  --text-secondary: #3f3d38;
+  --text-tertiary: #57544c;
+  --text-muted: #7a776e;
+  --text-faint: #a6a399;
+  --accent-cyan: #0e7490;
+  --accent-cyan-light: #0891b2;
+  --accent-cyan-on: #ffffff;
+  --accent-emerald: #059669;
+  --accent-amber: #b45309;
+}

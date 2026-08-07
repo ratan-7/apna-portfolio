@@ -9,9 +9,9 @@ exports.getAllContacts = async (req, res) => {
                 message: "contacts not found"
             })
         }
-        res.status(200).json({
+        res.status(200).json(
             contacts
-        })
+        )
     } catch (error) {
         res.status(500).json({
             message: error.message

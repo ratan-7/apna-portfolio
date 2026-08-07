@@ -24,6 +24,16 @@ const SocialSchema = new Schema({
         default: ""
     },
 
+    youtube: {
+        type: String,
+        default: ""
+    },
+
+    instagram: {
+        type: String,
+        default: ""
+    },
+
     email: {
         type: String,
         default: ""

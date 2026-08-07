@@ -1,10 +1,9 @@
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
+const { getSocialLinks, updateSocialLinks } = require("../controllers/socialLinksController.js");
+const { verifyToken } = require("../middleware/verifyToken.js");
 
-const { getLinks, updateLinks } = require("../controllers/socialLinksController")
-const { verifyToken } = require("../middleware/verifyToken")
+router.get("/social", getSocialLinks);
+router.put("/social", verifyToken, updateSocialLinks);
 
-router.get("/socials", getLinks)
-router.put("/socials",verifyToken, updateLinks)
-
-module.exports = router
+module.exports = router;

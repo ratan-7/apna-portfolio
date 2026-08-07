@@ -8,9 +8,9 @@ exports.getAllSkills = async (req, res) => {
             message: "not found any skills"
         })
     }
-    res.status(200).json({
+    res.status(200).json(
         skills
-    })
+    )
 }
 exports.addSkill = async (req, res) => {
     try {

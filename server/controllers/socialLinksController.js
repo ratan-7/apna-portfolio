@@ -1,69 +1,29 @@
-const Social = require("../models/SocialLinks")
+const SocialLinks = require("../models/SocialLinks.js");
 
-exports.getLinks = async (req, res) => {
+exports.getSocialLinks = async (req, res) => {
     try {
-
-        const links = await Social.findOne();
-
-        res.status(200).json({
-            success: true,
-            links
-        });
-
+        let social = await SocialLinks.findOne();
+        if (!social) {
+            social = await SocialLinks.create({});
+        }
+        res.status(200).json(social);
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ message: error.message });
     }
 };
 
-exports.updateLinks = async (req, res) => {
+exports.updateSocialLinks = async (req, res) => {
     try {
+        const { resumeUrl, github, linkedin, leetcode, youtube, instagram, email, phone } = req.body;
 
-        const {
-            resumeUrl,
-            github,
-            linkedin,
-            leetcode,
-            email,
-            phone
-        } = req.body;
+        const social = await SocialLinks.findOneAndUpdate(
+            {},
+            { resumeUrl, github, linkedin, leetcode, youtube, instagram, email, phone },
+            { new: true, upsert: true }
+        );
 
-        let links = await Social.findOne();
-
-        if (!links) {
-
-            links = await Social.create({
-                resumeUrl,
-                github,
-                linkedin,
-                leetcode,
-                email,
-                phone
-            });
-
-        } else {
-
-            links.resumeUrl = resumeUrl || links.resumeUrl;
-            links.github = github || links.github;
-            links.linkedin = linkedin || links.linkedin;
-            links.leetcode = leetcode || links.leetcode;
-            links.email = email || links.email;
-            links.phone = phone || links.phone;
-
-            await links.save();
-        }
-
-        res.status(200).json({
-            success: true,
-            links
-        });
-
+        res.status(200).json({ message: "Social links updated successfully!", social });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ message: error.message });
     }
 };

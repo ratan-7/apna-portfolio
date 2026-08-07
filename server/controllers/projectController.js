@@ -8,9 +8,9 @@ exports.getAllProjects = async (req, res) => {
                 message: "project not found"
             })
         }
-        res.status(200).json({
-            projects: projects
-        })
+        res.status(200).json(
+            projects
+        )
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -20,7 +20,7 @@ exports.getAllProjects = async (req, res) => {
 
 exports.createProject = async (req, res) => {
     try {
-        const { title, description, skills, image, url } = req.body;
+        const { title, description, skills, image, url, githubUrl } = req.body;
         const skillsArray = skills
             .split(",")
             .map(skill => skill.trim());
@@ -30,7 +30,8 @@ exports.createProject = async (req, res) => {
             description,
             skills: skillsArray,
             image,
-            url
+            url,
+            githubUrl
         });
         await project.save();
         res.status(200).json({
@@ -58,13 +59,19 @@ exports.deleteProject = async (req, res) => {
 
 exports.updateProject = async (req, res) => {
     try {
-        const { title, description, skills, url } = req.body;
+        const { title, description, skills, image, url, githubUrl } = req.body;
 
         const updateData = {
             title,
             description,
-            url
+            url,
+            image,
+            githubUrl
         };
+        if (skills) {
+            updateData.skills = skills.split(",").map(skill => skill.trim());
+        }
+
         const project = await Project.findByIdAndUpdate(req.params.id, updateData, { new: true });
         res.status(200).json({
             message: "Project update successfully!!", Project: project
