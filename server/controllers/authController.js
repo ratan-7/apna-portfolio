@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 const dotenv = require("dotenv")
 dotenv.config();
 
-
+/*
 exports.signUpUser = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
@@ -25,6 +25,7 @@ exports.signUpUser = async (req, res) => {
         })
     }
 }
+*/
 
 exports.loginUser = async (req, res) => {
     try {
