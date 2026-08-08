@@ -8,7 +8,7 @@ async function getOrCreateDoc() {
     return doc;
 }
 
-// Admin only — dashboard ke liye (poora document)
+
 exports.getAnalytics = async (req, res) => {
     try {
         const doc = await getOrCreateDoc();
@@ -18,8 +18,6 @@ exports.getAnalytics = async (req, res) => {
     }
 };
 
-// Public — sirf visitor/download counts, koi sensitive data nahi
-// Systems section me dikhane ke liye
 exports.getPublicStats = async (req, res) => {
     try {
         const doc = await getOrCreateDoc();
