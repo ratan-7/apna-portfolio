@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+import { ADMIN_BASE } from "../config/adminPath";
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -27,8 +28,8 @@ axiosInstance.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             localStorage.removeItem("token");
-            if (window.location.pathname.startsWith("/admin")) {
-                window.location.href = "/admin/login";
+            if (window.location.pathname.startsWith(`/${ADMIN_BASE}`)) {
+                window.location.href = ` /${ADMIN_BASE}/login`;
             }
         }
         return Promise.reject(error);
