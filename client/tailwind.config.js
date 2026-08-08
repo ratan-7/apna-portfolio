@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        pixel: ['"Pixelify Sans"', "system-ui", "sans-serif"],
+        pixel: ['"Space Grotesk"', "system-ui", "sans-serif"],
+        mono: ['"Space Mono"', "ui-monospace", "monospace"],
       },
     },
   },
