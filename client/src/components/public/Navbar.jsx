@@ -42,9 +42,6 @@ export default function Navbar() {
       { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
     );
 
-    // Sections async data ke baad DOM me aati hain — isliye turant
-    // observe karne ki jagah, MutationObserver se dekhte hain jab tak
-    // sab section ids DOM me na aa jayein, phir unhe observe karo.
     const observedIds = new Set();
 
     function tryObserveAll() {
