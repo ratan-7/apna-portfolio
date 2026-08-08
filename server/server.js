@@ -17,7 +17,7 @@ const app = express();
 const port = 3000;
 app.use(
     cors({
-        origin: "https://ratan-portfolio-beta.vercel.app/",
+        origin: "https://ratan-portfolio-beta.vercel.app",
         credentials: true,
     })
 );
