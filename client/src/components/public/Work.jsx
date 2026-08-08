@@ -48,17 +48,16 @@ function ProjectCard({ project, delay }) {
 
     return (
         <Reveal delay={delay}>
-            <div className="relative mb-14 pl-8 last:mb-0">
+            <div className="relative  mb-14 pl-8 last:mb-4">
                 <div
                     className="absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2"
                     style={{ borderColor: "var(--accent-cyan)", backgroundColor: "var(--bg)" }}
                 />
                 <div
-                    className="group rounded-lg border p-5 shadow-lg transition-all hover:-translate-y-0.5"
+                    className="group rounded-lg border p-5  transition-all hover:-translate-y-0.5"
                     style={{
                         backgroundColor: "var(--bg)",
                         borderColor: "var(--card-border-strong)",
-                        boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
                     }}
                 >
                     <div className="mb-1 flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)]">
