@@ -53,7 +53,7 @@ export default function Contact() {
         : [];
 
     return (
-        <footer id="contact" className="border-t px-6 py-16" style={{ borderColor: "var(--card-border)" }}>
+        <section id="contact" className="border-t px-6 py-16" style={{ borderColor: "var(--card-border)" }}>
             <div className="mx-auto max-w-4xl">
                 <Reveal>
                     <p className="mb-2 text-center font-mono text-xs uppercase tracking-widest text-[var(--text-muted)]">
@@ -155,6 +155,6 @@ export default function Contact() {
                     </div>
                 </Reveal>
             </div>
-        </footer>
+        </section>
     );
 }
