@@ -19,7 +19,8 @@ export default function Footer() {
     <footer className="border-t px-6 py-8" style={{ borderColor: "var(--card-border)" }}>
       <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 sm:flex-row">
         <p className="font-mono text-xs text-[var(--text-muted)]">
-          © {new Date().getFullYear()} {name}. Built with React + Tailwind.
+          <span className="font-sans">©</span>{" "}
+          {new Date().getFullYear()} {name}. Built with React + Tailwind.
         </p>
         <button
           onClick={scrollToTop}
