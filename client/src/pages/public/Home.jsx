@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import GridCanvas from "../../components/public/GridCanvas";
 import Navbar from "../../components/public/Navbar";
 import Hero from "../../components/public/Hero";
@@ -9,8 +10,17 @@ import Stack from "../../components/public/Stack";
 import Work from "../../components/public/Work";
 import Contact from "../../components/public/Contact";
 import Footer from "../../components/public/Footer";
+import { trackVisit } from "../../api/analyticsApi";
+
 
 export default function Home() {
+  useEffect(() => {
+    if (!sessionStorage.getItem("visit_tracked")) {
+      trackVisit()
+        .then(() => sessionStorage.setItem("visit_tracked", "true"))
+        .catch((err) => console.error("Visit tracking failed:", err));
+    }
+  }, []);
   return (
     <div
       className="relative min-h-screen w-full text-[var(--text-primary)] transition-colors duration-200"
