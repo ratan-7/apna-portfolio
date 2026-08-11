@@ -43,6 +43,13 @@ app.get('/', (req, res) => {
     res.send('Portfolio api is running...');
 });
 
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Server is awake"
+    });
+});
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
