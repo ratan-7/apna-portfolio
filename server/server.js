@@ -19,7 +19,9 @@ app.use(
     cors({
         origin: [
             "https://ratan-portfolio-beta.vercel.app",
-            "http://localhost:5173"
+            "http://localhost:5173",
+            "https://ratanmahata.in",
+            "https://www.ratanmahata.in"
         ],
         credentials: true,
     })
