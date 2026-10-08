@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import GridCanvas from "../../components/public/GridCanvas";
+import CityscapeBackground from "../../components/public/CityscapeBackground";
 import Navbar from "../../components/public/Navbar";
 import Hero from "../../components/public/Hero";
 import About from "../../components/public/About";
@@ -12,7 +12,6 @@ import Contact from "../../components/public/Contact";
 import Footer from "../../components/public/Footer";
 import { trackVisit } from "../../api/analyticsApi";
 
-
 export default function Home() {
   useEffect(() => {
     if (!sessionStorage.getItem("visit_tracked")) {
@@ -21,13 +20,14 @@ export default function Home() {
         .catch((err) => console.error("Visit tracking failed:", err));
     }
   }, []);
+
   return (
     <div
-      className="relative min-h-screen w-full text-[var(--text-primary)] transition-colors duration-200"
+      className="relative min-h-screen w-full text-[var(--text-primary)]"
       style={{ backgroundColor: "var(--bg)" }}
     >
       <div className="pointer-events-none fixed inset-0 z-0">
-        <GridCanvas />
+        <CityscapeBackground />
       </div>
 
       <div className="relative z-10">

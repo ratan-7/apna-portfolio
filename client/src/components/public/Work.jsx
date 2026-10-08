@@ -1,179 +1,202 @@
 import { useEffect, useState } from "react";
-import { ArrowUpRight, GitBranch, GitCommit, Github } from "lucide-react";
+import { ArrowUpRight, Github, X } from "lucide-react";
 import Reveal from "./Reveal";
 import { getProjects } from "../../api/projectApi";
 
-function parseGithubUrl(url) {
-    if (!url) return null;
-    try {
-        const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
-        if (!match) return null;
-        return { owner: match[1], repo: match[2].replace(/\.git$/, "") };
-    } catch {
-        return null;
-    }
-}
-
-function useLatestCommit(githubUrl) {
-    const [commit, setCommit] = useState(null);
-    const [checked, setChecked] = useState(false);
-
-    useEffect(() => {
-        const parsed = parseGithubUrl(githubUrl);
-        if (!parsed) {
-            setChecked(true); // eslint-disable-line react-hooks/set-state-in-effect
-            return;
-        }
-
-        fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/commits?per_page=1`)
-            .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-            .then((data) => {
-                if (Array.isArray(data) && data.length > 0) {
-                    setCommit({
-                        hash: data[0].sha.slice(0, 7),
-                        message: data[0].commit.message.split("\n")[0],
-                        url: data[0].html_url,
-                    });
-                }
-            })
-            .catch((err) => console.error("GitHub commit fetch failed:", err))
-            .finally(() => setChecked(true));
-    }, [githubUrl]);
-
-    return { commit, checked };
-}
-
-function ProjectCard({ project, delay }) {
-    const { commit, checked } = useLatestCommit(project.githubUrl);
-
-    return (
-        <Reveal delay={delay}>
-            <div className="relative  mb-14 pl-8 last:mb-4">
-                <div
-                    className="absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2"
-                    style={{ borderColor: "var(--accent-cyan)", backgroundColor: "var(--bg)" }}
-                />
-                <div
-                    className="group rounded-lg border p-5  transition-all hover:-translate-y-0.5"
-                    style={{
-                        backgroundColor: "var(--bg)",
-                        borderColor: "var(--card-border-strong)",
-                    }}
-                >
-                    <div className="mb-1 flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)]">
-                        {commit ? (
-                            <a
-                                href={commit.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="flex items-center gap-1 text-[var(--accent-amber)] hover:underline"
-                                title={commit.message}
-                            >
-                                <GitCommit size={11} /> {commit.hash}
-                            </a>
-                        ) : checked ? (
-                            project.githubUrl ? (
-                                <span className="text-[var(--text-muted)]">commit info unavailable</span>
-                            ) : (
-                                <span className="text-[var(--text-muted)]">no github repo linked</span>
-                            )
-                        ) : (
-                            <span className="text-[var(--text-muted)]">checking github...</span>
-                        )}
-                        {project.githubUrl && (
-                            <a
-                                href={project.githubUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="flex items-center gap-1 text-[var(--text-muted)] hover:text-[var(--accent-cyan-light)]"
-                            >
-                                <Github size={12} /> repo
-                            </a>
-                        )}
-                    </div>
-                    <div className="mb-2 flex items-center justify-between gap-3">
-                        <h3 className="font-pixel text-base tracking-wide text-[var(--text-primary)]">{project.title}</h3>
-                        {project.url && (
-                            <a
-                                href={project.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="flex shrink-0 items-center gap-1 text-sm text-[var(--accent-cyan-light)] opacity-0 transition-opacity group-hover:opacity-100"
-                            >
-                                view <ArrowUpRight size={14} />
-                            </a>
-                        )}
-                    </div>
-                    {project.image && (
-                        <img
-                            src={project.image}
-                            alt={project.title}
-                            className="mb-3 h-40 w-full rounded-md border object-cover"
-                            style={{ borderColor: "var(--card-border)" }}
-                        />
-                    )}
-                    <p className="mb-2 text-sm text-[var(--text-tertiary)]">{project.description}</p>
-                    {commit && (
-                        <p className="mb-3 truncate font-mono text-xs text-[var(--text-muted)]">
-                            last commit: "{commit.message}"
-                        </p>
-                    )}
-                    {project.skills?.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                            {project.skills.map((t) => (
-                                <span
-                                    key={t}
-                                    className="rounded-full border px-2.5 py-0.5 font-mono text-xs text-[var(--text-tertiary)]"
-                                    style={{ borderColor: "var(--card-border)", backgroundColor: "var(--card-bg-hover)" }}
-                                >
-                                    {t}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </Reveal>
-    );
-}
-
 export default function Work() {
-    const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeProject, setActiveProject] = useState(null);
 
-    useEffect(() => {
-        getProjects()
-            .then((res) => {
-                const data = res.data?.projects || res.data || [];
-                setProjects(Array.isArray(data) ? data : []);
-            })
-            .catch((err) => console.error("Projects load failed:", err))
-            .finally(() => setLoading(false));
-    }, []);
+  useEffect(() => {
+    getProjects()
+      .then((res) => {
+        const data = res.data?.projects || res.data || [];
+        setProjects(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => console.error("Projects load failed:", err))
+      .finally(() => setLoading(false));
+  }, []);
 
-    if (!loading && projects.length === 0) return null;
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setActiveProject(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
-    return (
-        <section id="work" className="mx-auto max-w-4xl px-6 pb-24">
-            <Reveal>
-                <h2 className="mb-8 flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-[var(--text-muted)]">
-                    <GitBranch size={14} className="text-[var(--accent-cyan)]" /> git log --projects
-                </h2>
-            </Reveal>
+  if (!loading && projects.length === 0) return null;
 
-            {loading ? (
-                <p className="font-mono text-sm text-[var(--text-muted)]">Loading...</p>
-            ) : (
-                <div className="relative">
-                    <div
-                        className="absolute bottom-0 left-[7px] top-2 w-px"
-                        style={{ backgroundColor: "var(--card-border)" }}
-                    />
-                    {projects.map((p, idx) => (
-                        <ProjectCard key={p._id} project={p} delay={idx * 90} />
+  return (
+    <section id="work" className="mx-auto max-w-5xl px-6 pb-24 text-center">
+      <Reveal>
+        <h2 className="mb-3 font-pixel text-2xl text-[var(--accent-cyan)] sm:text-3xl">
+          WHERE DID MY TIME GO?
+        </h2>
+        <p className="mx-auto mb-12 max-w-xl font-mono text-sm text-[var(--text-muted)]">
+          Full-stack builds, backend systems, and things shipped from scratch.
+        </p>
+      </Reveal>
+
+      {loading ? (
+        <p className="font-mono text-sm text-[var(--text-muted)]">Loading...</p>
+      ) : (
+        <div className="grid gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((p, idx) => (
+            <Reveal key={p._id} delay={idx * 70}>
+              <button
+                onClick={() => setActiveProject(p)}
+                className="flex h-full w-full flex-col border p-5 text-left transition-transform hover:-translate-y-0.5"
+                style={{
+                  backgroundColor: "var(--card-bg)",
+                  borderColor: "var(--card-border-strong)",
+                }}
+              >
+                {p.skills?.[0] && (
+                  <span
+                    className="mb-3 inline-block w-fit border px-2 py-1 font-pixel text-[8px] uppercase tracking-wide"
+                    style={{
+                      borderColor: "var(--card-border-strong)",
+                      color: "var(--text-tertiary)",
+                    }}
+                  >
+                    {p.skills[0]}
+                  </span>
+                )}
+
+                <h3 className="mb-3 font-pixel text-base uppercase text-[var(--accent-cyan)]">
+                  {p.title}
+                </h3>
+
+                {p.skills?.length > 0 && (
+                  <div className="mb-3 flex flex-wrap gap-1.5">
+                    {p.skills.slice(0, 4).map((s) => (
+                      <span
+                        key={s}
+                        className="border px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-secondary)]"
+                        style={{ borderColor: "var(--card-border)" }}
+                      >
+                        {s}
+                      </span>
                     ))}
-                </div>
+                    {p.skills.length > 4 && (
+                      <span className="font-mono text-[10px] text-[var(--text-muted)]">
+                        +{p.skills.length - 4}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <p className="mb-4 flex-1 font-mono text-xs leading-relaxed text-[var(--text-secondary)]">
+                  {p.description?.length > 110
+                    ? p.description.slice(0, 110) + "…"
+                    : p.description}
+                </p>
+
+                <span
+                  className="mt-auto flex items-center gap-1.5 font-pixel text-[8px] uppercase"
+                  style={{ color: "var(--accent-cyan)" }}
+                >
+                  view details <ArrowUpRight size={11} />
+                </span>
+              </button>
+            </Reveal>
+          ))}
+        </div>
+      )}
+
+      {/* Full-details modal */}
+      {activeProject && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          onClick={() => setActiveProject(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="max-h-[85vh] w-full max-w-lg overflow-y-auto border p-6 text-left"
+            style={{
+              backgroundColor: "var(--bg)",
+              borderColor: "var(--accent-cyan)",
+            }}
+          >
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <h3 className="font-pixel text-lg uppercase text-[var(--accent-cyan)]">
+                {activeProject.title}
+              </h3>
+              <button
+                onClick={() => setActiveProject(null)}
+                className="shrink-0 border p-1.5"
+                style={{
+                  borderColor: "var(--card-border-strong)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            {activeProject.image && (
+              <img
+                src={activeProject.image}
+                alt={activeProject.title}
+                className="mb-4 w-full rounded border object-cover"
+                style={{ borderColor: "var(--card-border)" }}
+              />
             )}
-        </section>
-    );
+
+            <p className="mb-5 font-mono text-sm leading-relaxed text-[var(--text-secondary)]">
+              {activeProject.description}
+            </p>
+
+            {activeProject.skills?.length > 0 && (
+              <div className="mb-6 flex flex-wrap gap-2">
+                {activeProject.skills.map((s) => (
+                  <span
+                    key={s}
+                    className="border px-2 py-1 font-pixel text-[8px] uppercase"
+                    style={{
+                      borderColor: "var(--card-border-strong)",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              {activeProject.url && (
+                <a
+                  href={activeProject.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 border px-4 py-2.5 font-pixel text-[9px] uppercase"
+                  style={{
+                    borderColor: "var(--accent-cyan)",
+                    color: "var(--accent-cyan)",
+                  }}
+                >
+                  live site <ArrowUpRight size={12} />
+                </a>
+              )}
+              {activeProject.githubUrl && (
+                <a
+                  href={activeProject.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 border px-4 py-2.5 font-pixel text-[9px] uppercase"
+                  style={{
+                    borderColor: "var(--card-border-strong)",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  <Github size={12} /> github
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
 }

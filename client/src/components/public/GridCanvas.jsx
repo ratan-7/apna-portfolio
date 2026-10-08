@@ -9,7 +9,9 @@ export default function GridCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     let width, height, dpr;
     let cellSize = 44;
@@ -55,7 +57,9 @@ export default function GridCanvas() {
       const light = isLight();
       ctx.clearRect(0, 0, width, height);
 
-      ctx.strokeStyle = light ? "rgba(23, 21, 18, 0.05)" : "rgba(148, 197, 255, 0.06)";
+      ctx.strokeStyle = light
+        ? "rgba(23, 21, 18, 0.05)"
+        : "rgba(148, 197, 255, 0.06)";
       ctx.lineWidth = 1;
       for (let x = 0; x <= cols; x++) {
         ctx.beginPath();
@@ -139,5 +143,10 @@ export default function GridCanvas() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className="pointer-events-none absolute inset-0 h-full w-full"
+    />
+  );
 }

@@ -1,32 +1,28 @@
 import { useEffect, useState } from "react";
-import { Terminal, Home, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { getProfile } from "../../api/profileApi";
 
 const SECTIONS = [
-  { id: "top", label: "home" },
-  { id: "about", label: "about" },
+  { id: "top", label: "intro" },
   { id: "experience", label: "experience" },
   { id: "education", label: "education" },
   { id: "systems", label: "systems" },
+  { id: "stack", label: "skills" },
   { id: "work", label: "work" },
-  { id: "stack", label: "stack" },
   { id: "contact", label: "contact" },
 ];
 
 export default function Navbar() {
-  const [active, setActive] = useState("home");
-  const [name, setName] = useState("portfolio");
+  const [active, setActive] = useState("intro");
+  const [name, setName] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     getProfile()
-      .then((res) => {
-        if (res.data?.name) {
-          setName(res.data.name.toLowerCase().replace(/\s+/g, "-"));
-        }
-      })
-      .catch(() => { });
+      .then((res) => res.data?.name && setName(res.data.name))
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -39,11 +35,10 @@ export default function Navbar() {
           }
         });
       },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
     );
 
     const observedIds = new Set();
-
     function tryObserveAll() {
       SECTIONS.forEach((s) => {
         if (observedIds.has(s.id)) return;
@@ -54,68 +49,130 @@ export default function Navbar() {
         }
       });
     }
-
     tryObserveAll();
-
-    const mutationObserver = new MutationObserver(() => {
+    const mo = new MutationObserver(() => {
       tryObserveAll();
-      if (observedIds.size === SECTIONS.length) {
-        mutationObserver.disconnect();
-      }
+      if (observedIds.size === SECTIONS.length) mo.disconnect();
     });
-    mutationObserver.observe(document.body, { childList: true, subtree: true });
+    mo.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       observer.disconnect();
-      mutationObserver.disconnect();
+      mo.disconnect();
     };
   }, []);
 
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
   };
 
   return (
     <nav
-      className="sticky top-0 z-20 border-b backdrop-blur-md"
-      style={{ backgroundColor: "var(--nav-bg)", borderColor: "var(--card-border)" }}
+      className="sticky top-0 z-20 border-b-2 border-dashed backdrop-blur-md"
+      style={{
+        backgroundColor: "var(--nav-bg)",
+        borderColor: "var(--card-border-strong)",
+      }}
     >
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-        <button
-          onClick={() => scrollTo("top")}
-          className="flex items-center gap-2 font-pixel text-sm tracking-wide text-[var(--accent-cyan-light)]"
-        >
-          <Terminal size={14} />
-          ~/{name}
-        </button>
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+        {/* Desktop — full tab row */}
+        <div className="hidden shrink-0 items-center gap-1.5 overflow-x-auto sm:flex">
+          {SECTIONS.map((s) => {
+            const isActive = active === s.label;
+            return (
+              <button
+                key={s.id}
+                onClick={() => scrollTo(s.id)}
+                className="whitespace-nowrap border px-2.5 py-1.5 font-pixel text-[10px] uppercase tracking-wide transition-colors"
+                style={{
+                  borderColor: isActive ? "var(--accent-cyan)" : "transparent",
+                  backgroundColor: isActive
+                    ? "var(--card-bg-hover)"
+                    : "transparent",
+                  color: isActive ? "var(--accent-cyan)" : "var(--text-muted)",
+                }}
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
 
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => scrollTo("top")}
-            className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-[var(--text-tertiary)] transition-colors hover:text-[var(--accent-cyan-light)]"
+        <div className="flex shrink-0 items-center gap-2 sm:hidden">
+          <span
+            className="border px-3 py-1.5 font-pixel text-[9px] uppercase"
+            style={{
+              borderColor: "var(--accent-cyan)",
+              backgroundColor: "var(--card-bg-hover)",
+              color: "var(--accent-cyan)",
+            }}
           >
-            <Home size={13} />
-            home
-          </button>
-
-          <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[var(--text-secondary)]">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent-emerald)] opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--accent-emerald)]" />
-            </span>
             {active}
-          </div>
+          </span>
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+            className="flex h-7 w-7 items-center justify-center border"
+            style={{
+              borderColor: "var(--card-border-strong)",
+              color: "var(--text-primary)",
+            }}
+          >
+            {menuOpen ? <X size={13} /> : <Menu size={13} />}
+          </button>
+        </div>
 
+        <div className="flex shrink-0 items-center gap-2">
+          {name && (
+            <span className="hidden font-pixel text-[9px] text-[var(--text-tertiary)] sm:inline">
+              {name}
+            </span>
+          )}
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="rounded-full border p-1.5 text-[var(--text-primary)] transition-colors hover:border-[var(--accent-cyan)] hover:text-[var(--accent-cyan)]"
-            style={{ borderColor: "var(--card-border)" }}
+            className="border p-1.5 text-[var(--text-primary)]"
+            style={{ borderColor: "var(--card-border-strong)" }}
           >
-            {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
+            {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
           </button>
         </div>
       </div>
+
+      {menuOpen && (
+        <div
+          className="flex flex-wrap gap-2 border-t px-4 py-3 sm:hidden"
+          style={{
+            borderColor: "var(--card-border-strong)",
+            backgroundColor: "var(--bg)",
+          }}
+        >
+          {SECTIONS.map((s) => {
+            const isActive = active === s.label;
+            return (
+              <button
+                key={s.id}
+                onClick={() => scrollTo(s.id)}
+                className="border px-2.5 py-1.5 font-pixel text-[9px] uppercase"
+                style={{
+                  borderColor: isActive
+                    ? "var(--accent-cyan)"
+                    : "var(--card-border-strong)",
+                  backgroundColor: isActive
+                    ? "var(--card-bg-hover)"
+                    : "transparent",
+                  color: isActive
+                    ? "var(--accent-cyan)"
+                    : "var(--text-secondary)",
+                }}
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </nav>
   );
 }

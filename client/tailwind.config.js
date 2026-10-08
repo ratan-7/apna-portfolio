@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        pixel: ['"Space Grotesk"', "system-ui", "sans-serif"],
+        pixel: ['"Press Start 2P"', "system-ui", "sans-serif"],
         mono: ['"Space Mono"', "ui-monospace", "monospace"],
       },
     },
