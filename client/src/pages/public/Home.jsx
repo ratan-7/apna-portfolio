@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import CityscapeBackground from "../../components/public/CityscapeBackground";
+import LoadingScreen from "../../components/public/LoadingScreen";
 import Navbar from "../../components/public/Navbar";
 import Hero from "../../components/public/Hero";
 import About from "../../components/public/About";
@@ -26,6 +27,8 @@ export default function Home() {
       className="relative min-h-screen w-full text-[var(--text-primary)]"
       style={{ backgroundColor: "var(--bg)" }}
     >
+      <LoadingScreen />
+
       <div className="pointer-events-none fixed inset-0 z-0">
         <CityscapeBackground />
       </div>
